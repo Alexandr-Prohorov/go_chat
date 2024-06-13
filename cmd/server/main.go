@@ -16,33 +16,42 @@ import (
 	"path/filepath"
 )
 
+type Config struct {
+	DBUser       string `json:"db_user"`
+	DBPassword   string `json:"db_password"`
+	DBName       string `json:"db_name"`
+	DBHost       string `json:"db_host"`
+	DBPort       string `json:"db_port"`
+	JWTSecretKey string `json:"jwt_secret_key"`
+}
+
 func main() {
-	db, err := sql.Open("postgres", "postgres://postgres:157947XXxx@localhost/postgres?sslmode=disable")
-	if err != nil {
-		log.Fatal(err) // логируем если соединение не установлено
-	}
-	defer db.Close() // гарантия закрытия соединения
-
-	if err = db.Ping(); err != nil { // проверка соединения
-		log.Fatal(err)
-	}
-
 	file, err := os.ReadFile("config.json")
 	if err != nil {
 		log.Fatal("Error reading config file:", err)
 	}
 
-	fmt.Println(file)
-
-	var config map[string]string
+	var config Config
 	err = json.Unmarshal(file, &config)
 	if err != nil {
 		log.Fatal("Error parsing config file:", err)
 	}
 
-	jwtKey := config["jwt_secret_key"]
+	// Формирование строки подключения
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
 
-	fmt.Println(jwtKey)
+	// Подключение к базе данных
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close() // гарантия закрытия соединения
+
+	if err = db.Ping(); err != nil { // проверка соединения
+		log.Fatal(err)
+	}
 
 	userStore := store.NewUserStore(db)
 	authStore := store.NewAuthStore(db)
@@ -88,7 +97,7 @@ func main() {
 		tokenStr := cookie.Value
 		claims := &middleware.Claims{}
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+			return config.JWTSecretKey, nil
 		})
 		if err != nil || !token.Valid {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

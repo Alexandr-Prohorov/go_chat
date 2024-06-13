@@ -34,6 +34,6 @@ func (s *UserStore) GetAllUsers() ([]*models.User, error) { // метод экз
 }
 
 func (s *UserStore) AddUser(user *models.User, hashedPassword []byte) error {
-	_, err := s.db.Exec("INSERT INTO users (id, username, surname, email, password) VALUES ($1, $2, $3, $4, $5)", user.ID, user.Username, user.Surname, user.Email, hashedPassword)
+	_, err := s.db.Exec("INSERT INTO users (username, surname, email, password) VALUES ($1, $2, $3, $4)", user.Username, user.Surname, user.Email, hashedPassword)
 	return err
 }
