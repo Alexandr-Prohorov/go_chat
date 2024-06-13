@@ -1,6 +1,5 @@
 const url = 'http://localhost:8080/users'
 const usersList = document.querySelector('.chat-list')
-let users = []
 
 async function getUsers () {
     try {
