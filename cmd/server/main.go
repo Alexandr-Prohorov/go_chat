@@ -86,6 +86,17 @@ func main() {
 		w.Write(file)
 	})
 
+	r.HandleFunc("/main_script.js", func(w http.ResponseWriter, r *http.Request) {
+		filePath := filepath.Join("ui", "main_script.js")
+		file, err := os.ReadFile(filePath)
+		if err != nil {
+			http.Error(w, "Could not read file", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "text/javascript")
+		w.Write(file)
+	})
+
 	r.HandleFunc("/", getUi) // TODO: переделать
 	r.HandleFunc("/main", func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("Token")
