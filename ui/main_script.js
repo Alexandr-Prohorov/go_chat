@@ -35,4 +35,11 @@ async function getUsers () {
         usersList.appendChild(user);
         console.log('гатова')
     });
+
+    const chat_items = document.querySelectorAll('.chat-item')
+    chat_items.forEach(elem => {
+        elem.addEventListener('click', function(event) {
+            console.log(event)
+        })
+    })
 })();
