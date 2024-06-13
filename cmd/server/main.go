@@ -76,7 +76,7 @@ func main() {
 	})
 
 	r.HandleFunc("/scripts.js", func(w http.ResponseWriter, r *http.Request) {
-		filePath := filepath.Join("ui", "scripts.js")
+		filePath := filepath.Join("ui", "/scripts/scripts.js")
 		file, err := os.ReadFile(filePath)
 		if err != nil {
 			http.Error(w, "Could not read file", http.StatusInternalServerError)
@@ -87,7 +87,7 @@ func main() {
 	})
 
 	r.HandleFunc("/main_script.js", func(w http.ResponseWriter, r *http.Request) {
-		filePath := filepath.Join("ui", "main_script.js")
+		filePath := filepath.Join("ui", "/scripts/main_script.js")
 		file, err := os.ReadFile(filePath)
 		if err != nil {
 			http.Error(w, "Could not read file", http.StatusInternalServerError)
@@ -102,6 +102,7 @@ func main() {
 		cookie, err := r.Cookie("Token")
 		if err != nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+
 			return
 		}
 
@@ -115,7 +116,7 @@ func main() {
 			return
 		}
 
-		filePath := filepath.Join("ui", "main.html")
+		filePath := filepath.Join("ui", "/views/main.html")
 		file, err := os.ReadFile(filePath)
 		if err != nil {
 			http.Error(w, "Could not read file", http.StatusInternalServerError)
@@ -130,7 +131,7 @@ func main() {
 }
 
 func getUi(w http.ResponseWriter, r *http.Request) {
-	filePath := filepath.Join("ui", "index.html")
+	filePath := filepath.Join("ui", "/views/index.html")
 	file, err := os.ReadFile(filePath)
 	if err != nil {
 		http.Error(w, "Could not read file", http.StatusInternalServerError)
