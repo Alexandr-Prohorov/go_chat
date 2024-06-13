@@ -39,12 +39,12 @@ func (v *Claims) GenerateJwt() (string, error) {
 	var jwtKey Jwt
 	err = json.Unmarshal(file, &jwtKey)
 	if err != nil {
-		fmt.Println("Error unmarshaling jwtKey:", err)
+		fmt.Println("Error unmarshaling file:", err)
 		return "", err
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, v)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString([]byte(jwtKey.Key))
 	if err != nil {
 		return "", nil
 	}

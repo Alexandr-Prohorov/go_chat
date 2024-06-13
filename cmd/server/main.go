@@ -97,7 +97,7 @@ func main() {
 		tokenStr := cookie.Value
 		claims := &middleware.Claims{}
 		token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return config.JWTSecretKey, nil
+			return []byte(config.JWTSecretKey), nil
 		})
 		if err != nil || !token.Valid {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

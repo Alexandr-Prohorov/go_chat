@@ -40,13 +40,11 @@ func (h *AuthHandler) Auth(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "ХЗчо указатьб", http.StatusForbidden)
 		return
 	}
-	//пусть этот комментарий будет тут, как напоминание о том что должно быть нахой
 
 	http.SetCookie(w, &http.Cookie{
 		Name:  "Token",
 		Value: token,
-		//Expires: time.Now().Add(5 * time.Minute),
-		Path: "/", // сделать куки доступной для всего домена
+		Path:  "/",
 	})
 
 	w.WriteHeader(http.StatusCreated)
