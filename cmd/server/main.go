@@ -2,6 +2,7 @@ package main
 
 import (
 	"chat-app/internal/api"
+	"chat-app/internal/middleware"
 	"chat-app/internal/store"
 	"database/sql"
 	"encoding/json"
@@ -62,7 +63,8 @@ func main() {
 	mainScriptsFile := api.NewStaticFile("/scripts/main_script.js", "text/javascript")
 
 	r := mux.NewRouter()
-	r.HandleFunc("/users", userHandler.GetUsers).Methods("GET")
+	r.HandleFunc("/users", middleware.AuthMiddleware(config.JWTSecretKey, userHandler.GetUsers)).Methods("GET")
+	r.HandleFunc("/user", middleware.AuthMiddleware(config.JWTSecretKey, userHandler.GetOneUser)).Methods("GET")
 	r.HandleFunc("/users/create", userHandler.AddUser).Methods("POST")
 	r.HandleFunc("/auth", authHandler.Auth).Methods("POST")
 

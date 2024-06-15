@@ -3,7 +3,7 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"os"
 	"time"
@@ -11,7 +11,7 @@ import (
 
 type Claims struct {
 	Username string `json:"username"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 type Jwt struct {
@@ -19,11 +19,11 @@ type Jwt struct {
 }
 
 func NewClaims(username string) *Claims {
-	expirationTime := time.Now().Add(5 * time.Hour)
+	//expirationTime := time.Now().Add(5 * time.Hour)
 	return &Claims{
 		Username: username,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
 	}
 }

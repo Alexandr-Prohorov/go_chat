@@ -1,9 +1,26 @@
-const url = 'http://localhost:8080/users'
+const url = 'http://localhost:8080/'
 const usersList = document.querySelector('.chat-list')
 
 async function getUsers () {
     try {
-        const resp = await fetch(url, {
+        const resp = await fetch(url + 'users', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+        const data = resp.json()
+        console.log(data)
+        return data
+    } catch (e) {
+        console.log('Error:', e)
+    }
+}
+
+async function getOneUser () {
+    try {
+        const resp = await fetch(url + 'user', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -20,6 +37,7 @@ async function getUsers () {
 
 (async function() {
     let users =  await getUsers();
+    let user =  await getOneUser();
 
     users.forEach(elem => {
         const user = document.createElement('div');
@@ -42,4 +60,7 @@ async function getUsers () {
             console.log(event)
         })
     })
+
+    const user_container = document.querySelector('.user')
+    user_container.textContent = user.Username
 })();

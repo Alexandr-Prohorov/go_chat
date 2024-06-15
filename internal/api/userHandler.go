@@ -1,6 +1,7 @@
 package api
 
 import (
+	"chat-app/internal/utils"
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -20,9 +21,34 @@ func NewUserHandler(store store.UserStore) *UserHandler {
 }
 
 func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	users, err := h.Store.GetAllUsers()
+	//username := r.Context().Value("username").(string)
+	//fmt.Println(username)
+	//token := middleware.AuthMiddleware(h.JWTSecretKey)
+	//
+	//fmt.Println(token)
+
+	//username := r.Context().Value("username").(string)
+	//if username == "" {
+	//	http.Error(w, "Username not found", http.StatusUnauthorized)
+	//	return
+	//}
+
+	username := utils.GetContextValue(w, r)
+
+	users, err := h.Store.GetAllUsers(username)
 	if err != nil {
 		http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(users)
+}
+
+func (h *UserHandler) GetOneUser(w http.ResponseWriter, r *http.Request) {
+	username := utils.GetContextValue(w, r)
+
+	users, err := h.Store.GetOneUser(username)
+	if err != nil {
+		http.Error(w, "Failed to fetch user", http.StatusInternalServerError)
 		return
 	}
 	json.NewEncoder(w).Encode(users)
