@@ -6,6 +6,7 @@ import (
 	"chat-app/internal/store"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 type AuthHandler struct {
@@ -33,7 +34,7 @@ func (h *AuthHandler) Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claims := middleware.NewClaims(user.Username)
+	claims := middleware.NewClaims(user.Username, strconv.Itoa(user.ID))
 
 	token, err := claims.GenerateJwt()
 	if err != nil {

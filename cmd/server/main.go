@@ -53,25 +53,32 @@ func main() {
 
 	userStore := store.NewUserStore(db)
 	authStore := store.NewAuthStore(db)
+	chatStore := store.NewChatStore(db)
 	userHandler := api.NewUserHandler(*userStore)
 	authHandler := api.NewAuthHandler(*authStore)
+	chatHandler := api.NewChatHandler(*chatStore)
 
 	indexFile := api.NewStaticFile("/views/index.html", "text/html")
 	mainFile := api.NewStaticFile("/views/main.html", "text/html")
+	chatRoomFile := api.NewStaticFile("/views/chat_room.html", "text/html")
 	stylesFile := api.NewStaticFile("/styles.css", "text/css")
 	scriptsFile := api.NewStaticFile("/scripts/scripts.js", "text/javascript")
 	mainScriptsFile := api.NewStaticFile("/scripts/main_script.js", "text/javascript")
+	chatRoomScriptFile := api.NewStaticFile("/scripts/chat_room_script.js", "text/javascript")
 
 	r := mux.NewRouter()
 	r.HandleFunc("/users", middleware.AuthMiddleware(config.JWTSecretKey, userHandler.GetUsers)).Methods("GET")
 	r.HandleFunc("/user", middleware.AuthMiddleware(config.JWTSecretKey, userHandler.GetOneUser)).Methods("GET")
+	r.HandleFunc("/chat-room/{id}/chat", middleware.AuthMiddleware(config.JWTSecretKey, chatHandler.GetOneChat)).Methods("GET")
 	r.HandleFunc("/users/create", userHandler.AddUser).Methods("POST")
 	r.HandleFunc("/auth", authHandler.Auth).Methods("POST")
 
 	r.HandleFunc("/", indexFile.StaticFileHandler)
 	r.HandleFunc("/main", mainFile.StaticFileHandler)
+	r.HandleFunc("/chat-room/{id}", chatRoomFile.StaticFileHandler)
 	r.HandleFunc("/scripts.js", scriptsFile.StaticFileHandler)
 	r.HandleFunc("/main_script.js", mainScriptsFile.StaticFileHandler)
+	r.HandleFunc("/chat_room_script.js", chatRoomScriptFile.StaticFileHandler)
 	r.HandleFunc("/styles.css", stylesFile.StaticFileHandler)
 
 	log.Println("Server starting on :8080")

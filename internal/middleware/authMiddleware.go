@@ -29,6 +29,7 @@ func AuthMiddleware(jwtKey string, next http.HandlerFunc) http.HandlerFunc {
 		//r = r.WithContext(ctx)
 
 		ctx := context.WithValue(r.Context(), "username", claims.Username)
+		ctx = context.WithValue(ctx, "id", claims.ID)
 		r = r.WithContext(ctx)
 
 		next(w, r)

@@ -21,19 +21,7 @@ func NewUserHandler(store store.UserStore) *UserHandler {
 }
 
 func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	//username := r.Context().Value("username").(string)
-	//fmt.Println(username)
-	//token := middleware.AuthMiddleware(h.JWTSecretKey)
-	//
-	//fmt.Println(token)
-
-	//username := r.Context().Value("username").(string)
-	//if username == "" {
-	//	http.Error(w, "Username not found", http.StatusUnauthorized)
-	//	return
-	//}
-
-	username := utils.GetContextValue(w, r)
+	username := utils.GetContextValue(w, r, "username")
 
 	users, err := h.Store.GetAllUsers(username)
 	if err != nil {
@@ -44,7 +32,7 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) GetOneUser(w http.ResponseWriter, r *http.Request) {
-	username := utils.GetContextValue(w, r)
+	username := utils.GetContextValue(w, r, "username")
 
 	users, err := h.Store.GetOneUser(username)
 	if err != nil {

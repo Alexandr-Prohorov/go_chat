@@ -18,9 +18,9 @@ func NewAuthStore(db *sql.DB) *AuthStore {
 func (s *AuthStore) GetUser(u *models.Auth) (*models.User, error) {
 	var user models.User
 
-	row := s.db.QueryRow("SELECT username, password FROM users WHERE username = $1", u.Login)
+	row := s.db.QueryRow("SELECT * FROM users WHERE username = $1", u.Login)
 
-	err := row.Scan(&user.Username, &user.Password)
+	err := row.Scan(&user.ID, &user.Username, &user.Surname, &user.Surname, &user.Password)
 	if err != nil {
 		return nil, err
 	}

@@ -1,5 +1,6 @@
 const url = 'http://localhost:8080/'
 const usersList = document.querySelector('.chat-list')
+let userId = null
 
 async function getUsers () {
     try {
@@ -42,6 +43,7 @@ async function getOneUser () {
     users.forEach(elem => {
         const user = document.createElement('div');
         user.classList.add('chat-item');
+        user.id = elem.ID
 
         const userSpan = document.createElement('span');
         userSpan.classList.add('chat-name');
@@ -57,6 +59,8 @@ async function getOneUser () {
     const chat_items = document.querySelectorAll('.chat-item')
     chat_items.forEach(elem => {
         elem.addEventListener('click', function(event) {
+            userId = event.target.id
+            window.location.href = '/chat-room/' + event.target.id;
             console.log(event)
         })
     })
