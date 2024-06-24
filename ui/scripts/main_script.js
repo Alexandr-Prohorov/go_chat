@@ -1,6 +1,5 @@
-const url = 'http://localhost:8080/'
+const url = 'http://192.168.137.149:8080/'
 const usersList = document.querySelector('.chat-list')
-let userId = null
 
 async function getUsers () {
     try {
@@ -59,8 +58,8 @@ async function getOneUser () {
     const chat_items = document.querySelectorAll('.chat-item')
     chat_items.forEach(elem => {
         elem.addEventListener('click', function(event) {
-            userId = event.target.id
             window.location.href = '/chat-room/' + event.target.id;
+            localStorage.setItem("userId", event.target.id);
             console.log(event)
         })
     })

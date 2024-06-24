@@ -130,6 +130,7 @@ button:hover {
     overflow-y: auto;
     padding: 1rem 0;
     border-bottom: 1px solid #ccc;
+    max-height: 580px;
 }
 
 .chat-message {

@@ -2,7 +2,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     event.preventDefault();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    const url = 'http://localhost:8080/auth'
+    const url = 'http://192.168.137.149:8080/auth'
     const body = {
         Login: username,
         Password: password

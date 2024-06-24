@@ -70,6 +70,8 @@ func main() {
 	r.HandleFunc("/users", middleware.AuthMiddleware(config.JWTSecretKey, userHandler.GetUsers)).Methods("GET")
 	r.HandleFunc("/user", middleware.AuthMiddleware(config.JWTSecretKey, userHandler.GetOneUser)).Methods("GET")
 	r.HandleFunc("/chat-room/{id}/chat", middleware.AuthMiddleware(config.JWTSecretKey, chatHandler.GetOneChat)).Methods("GET")
+	r.HandleFunc("/chat-room/{id}/messages/{id}", middleware.AuthMiddleware(config.JWTSecretKey, chatHandler.GetMessages)).Methods("GET")
+	r.HandleFunc("/ws/chat-room/{chat_id}", middleware.AuthMiddleware(config.JWTSecretKey, chatHandler.ChatRoomWebSocket))
 	r.HandleFunc("/users/create", userHandler.AddUser).Methods("POST")
 	r.HandleFunc("/auth", authHandler.Auth).Methods("POST")
 
@@ -82,5 +84,5 @@ func main() {
 	r.HandleFunc("/styles.css", stylesFile.StaticFileHandler)
 
 	log.Println("Server starting on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe("192.168.137.149:8080", r))
 }
